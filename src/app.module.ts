@@ -15,6 +15,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './user/entities/user.entity';
+import { PostModule } from './post/post.module';
+import { PostEntity } from './post/entities/post.entity';
+import { CommentModule } from './comment/comment.module';
+import { newCommentEntity } from './comment/entities/comment.entity';
 
 @Module({
   imports: [
@@ -25,10 +29,12 @@ import { UserEntity } from './user/entities/user.entity';
       username: POSTGRES_USER,
       password: POSTGRES_PASSWORD,
       database: POSTGRES_DATABASE,
-      entities: [UserEntity],
+      entities: [UserEntity, PostEntity, newCommentEntity],
       synchronize: true,
     }),
     UserModule,
+    PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

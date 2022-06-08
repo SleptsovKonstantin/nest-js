@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,17 +20,28 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const firstUser = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id: id })
+      .getOne();
+
+    if (!firstUser)
+      throw new NotFoundException(`User with id #${id} not found`);
+
+    return firstUser;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, _updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, _updateUserDto: UpdateUserDto) {
+    await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id: id })
+      .getOne();
+
+    return this.usersRepository.update(id, _updateUserDto);
   }
 
   remove(id: number) {
     return this.usersRepository.delete(id);
-    // return `This action removes a #${id} user`;
   }
 }
