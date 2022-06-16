@@ -28,14 +28,13 @@ export class UserService {
 
     if (user) throw new ConflictException(`this email already taken`);
 
-    const saltRound = process.env.SALT_ROUNDS;
+    const saltRound = Number(process.env.SALT_ROUND);
     const { password, ...other } = dto;
     const hash = await bcrypt.hash(password, saltRound);
     const newUser = {
       password: hash,
       ...other,
     };
-    console.log(newUser);
     return this.usersRepository.save(newUser);
   }
 

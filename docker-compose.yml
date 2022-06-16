@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13.3
+    container_name: db
+    environment:
+      POSTGRES_DB: exceeddb
+      POSTGRES_USER: exceedpguser
+      POSTGRES_PASSWORD: pgpwd4exceed
+    ports:
+      - "5433:5432"
+    env_file:
+      - .env  
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

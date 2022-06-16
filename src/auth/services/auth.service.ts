@@ -1,18 +1,15 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { TokenService } from 'src/token/token.service';
 
 import { Request, Response } from 'express';
-// import { hash, compareSync } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService,
     private tokenService: TokenService,
   ) {}
 
@@ -28,29 +25,25 @@ export class AuthService {
     return null;
   }
 
-  generateJwtToken(data: { id: string; email: string }) {
-    const payload = { email: data.email, sub: data.id };
-    return this.jwtService.sign(payload);
-  }
+  // generateJwtToken(data: { id: string; email: string }) {
+  //   const payload = { email: data.email, sub: data.id };
+  //   return this.jwtService.sign(payload);
+  // }
 
   async login(user: UserEntity) {
-    const { password, ...userData } = user;
-    return {
-      ...userData,
-      access_token: this.generateJwtToken(userData),
-    };
+    // const { password, ...userData } = user;
+    // return {
+    //   ...userData,
+    //   token: this.generateJwtToken(userData),
+    // };
   }
 
   async register(dto: CreateUserDto) {
     try {
-      console.log('kjshfkjgdskjf');
-
       const { password, ...newUser } = await this.userService.create(dto);
-      console.log(newUser);
-      console.log(password);
+      // const newToken = this.generateJwtToken(newUser);
       return {
         ...newUser,
-        access_token: this.generateJwtToken(newUser),
       };
     } catch (err) {
       throw new ForbiddenException(err);

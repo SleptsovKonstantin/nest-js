@@ -1,5 +1,3 @@
-// import { Response } from 'express';
-
 import {
   Controller,
   Post,
@@ -13,12 +11,11 @@ import {
 } from '@nestjs/common';
 
 import { Request, Response } from 'express';
-
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AuthService } from '../services/auth.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
-import { UserService } from 'src/user/user.service';
+// import { UserService } from 'src/user/user.service';
 
 interface RequestNew extends Request {
   user: {
@@ -29,20 +26,17 @@ interface RequestNew extends Request {
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
+  @Post('registration')
   register(@Body() dto: CreateUserDto) {
     return this.authService.register(dto);
   }
 
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req) {
-    return this.authService.login(req.user);
+  async login(@Req() req, @Res() res: Response) {
+    return this.authService.login(req.user, res);
   }
 
   @UseGuards(JwtAuthGuard)
