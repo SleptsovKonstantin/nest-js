@@ -1,18 +1,52 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-  // 'uuid'
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+  // @PrimaryGeneratedColumn()
+  // id: number;
 
   @Column()
   fullName: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
-  // { unique: true }
 
   @Column({ nullable: true })
   password?: string;
+
+  @Column({ nullable: true })
+  token: string;
+
+  @Column({ default: 'offline' })
+  status: string;
+
+  @Column({ default: 'defaultAvatar.png' })
+  avatarURL: string;
+
+  // @OneToMany(() => MessageEntity, (message) => message.user)
+  // messages: MessageEntity[];
+
+  // @OneToMany(() => RoomEntity, (room) => room.owner)
+  // owningRooms: RoomEntity[];
+
+  // @ManyToMany(() => RoomEntity, (room) => room.members, { onUpdate: 'CASCADE' })
+  // @JoinTable({ name: 'room-members' })
+  // rooms: RoomEntity[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }
